@@ -1,0 +1,11 @@
+Django>=1.8,<2.0
+psycopg2
+matplotlib
+numpy
+Pillow>=2.1.0
+scipy
+cython
+scikit-image
+djangorestframework
+markdown
+django-filter
