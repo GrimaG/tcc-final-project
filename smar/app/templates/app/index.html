@@ -1,0 +1,588 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>TCC</title>
+	<!-- BOOTSTRAP STYLES-->
+	<link href="../../static/assets/css/bootstrap.css" rel="stylesheet" />
+	<!-- FONTAWESOME STYLES-->
+	<link href="../../static/assets/css/font-awesome.css" rel="stylesheet" />
+	<!-- CUSTOM STYLES-->
+	<link href="../../static/assets/css/custom.css" rel="stylesheet" />
+	<!-- GOOGLE FONTS-->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+	<!-- JQUERY SCRIPTS -->
+	<script type="text/javascript" src="../../static/assets/wizard/js/jquery-2.0.0.min.js"></script>
+	<link href="../../static/assets/wizard/styles/smart_wizard_vertical.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="../../static/assets/wizard/js/jquery.smartWizard.js"></script>
+
+	<!-- slick import -->
+	<script src="../../static/assets/js/jssor.slider-22.2.16.mini.js" type="text/javascript"></script>
+	<script src="../../static/assets/material/material.js" type="text/javascript"></script>
+	<link href="../../static/assets/material/material.css" rel="stylesheet" />
+</head>
+
+<body>
+
+
+
+	<!-- /. NAV TOP  -->
+
+	<!-- /. NAV SIDE  -->
+	<div id="page-wrapper">
+		<div id="page-inner">
+			
+
+			<div class="row initial-step">
+				<div class="col-md-12 main-title">
+					<h1 class="center-header">S.M.B.R.</h1>
+					<p class="center-header">Sistema de Monitoramento de Barragens de Rejeito</p>
+					<button onclick="nextStep('initial-step','first-step');" class="btn btn-success start-btn">Iniciar</a>
+				</div>
+			</div>
+
+			<div class="row first-step">
+				<div class="choose-option">
+						<h3>Selecione uma opção</h1>
+
+					<div class="demo-card-fundao mdl-card mdl-shadow--2dp" onclick="selectImg('fundao')">
+						<div class="mdl-card__title mdl-card--expand"></div>
+						<div class="mdl-card__actions">
+							<span class="demo-card-image__filename">Fundao</span>
+						</div>
+					</div>
+					<div class="demo-card-santarem mdl-card mdl-shadow--2dp" onclick="selectImg('santarem')">
+						<div class="mdl-card__title mdl-card--expand"></div>
+						<div class="mdl-card__actions">
+							<span class="demo-card-image__filename">Santarem</span>
+						</div>
+					</div>
+					<div class="demo-card-germano mdl-card mdl-shadow--2dp" onclick="selectImg('germano')">
+						<div class="mdl-card__title mdl-card--expand"></div>
+						<div class="mdl-card__actions">
+							<span class="demo-card-image__filename">Germano</span>
+					</div>
+					</div>
+					<div class="demo-card-select mdl-card mdl-shadow--2dp" >
+						<div class="mdl-card__title mdl-card--expand"></div>
+						<div class="mdl-card__actions">
+							<span class="demo-card-image__filename">Fundao</span>
+						</div>
+					</div>
+
+				</div>
+				<div class="list-imgs">
+					<h4 class="StepTitle">Selecione as imagens</h2>
+					<div id="list"></div>
+
+				</div>
+				<div class="select-img">
+						<h4 class="StepTitle">Selecione as imagens</h2>
+					<br>
+
+					<div class="col-md-4 col-sm-3 col-xs-6">
+						<input type="file" onchange="readURL(event,'img-1')" style="display:none;" id="file_1" accept="image/*">
+						<h5 class="center-header" id="img-text-1"><a onclick="document.getElementById('file_1').click();" class="btn btn-success">Imagem 1</a></h5>
+						<div id="img-1" class="alert  text-center">
+
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-3 col-xs-6">
+						<input type="file" onchange="readURL(event,'img-2')" style="display:none;" id="file_2" accept="image/*">
+						<h5 class="center-header" id="img-text-2"><a onclick="document.getElementById('file_2').click();" class="btn btn-success">Imagem 2</a></h5>
+						<div id="img-2" class="alert  text-center">
+
+						</div>
+					</div>
+					
+				</div>
+				<div class="choose-recent">
+						<h3 class="StepTitle">Escolha a imagem mais recente</h2>
+							<div class="choose-recent-container">
+						<div class="child-container">
+							<div onclick="setMain(1, 'select-1');" id="select-1" class="alert  text-center">
+
+							</div>
+						</div>
+
+						<div class="child-container-2">
+							<div onclick="setMain(2, 'select-2');" id="select-2" class="alert  text-center">
+
+							</div>
+						</div>
+					</div>
+						<button onclick="nextStep('choose-recent','crop-img');" class="recent-btn btn btn-success start-btn">Próximo</a>
+
+				</div>
+				<div class="crop-img">
+
+						<table class="crop-area">
+								<tr>
+								<td>
+								  <!--input type="button" id="crop" value="CROP" /-->
+								  <div id="container">
+										<h3>Clique na imagem com pontos sequenciais informando a área da barragem.</h5>
+							  <canvas width="500" height="500" id="myCanvas" style="position:relative;margin-left:0px;margin-top:0px;"></canvas>
+								  </div>
+							  <div id="png" style="display:block;"><br/></div>
+
+							   
+							  <div id="oldposx" style="display:none;"></div>
+							  <div id="oldposy" style="display:none;"></div>
+							  <div id="posx" style="display:none;"></div>
+							  <div id="posy" style="display:none;"></div>
+							  </td><td>
+								  
+							  <div id="myimg"></div><!--preview of image after upload-->
+							</td>
+						</tr>	
+						</table>
+						<button onclick="nextStep('crop-img', 'second-step');removeSpot();" class="recent-btn-crop recent-btn btn btn-success start-btn">Próximo</a>
+
+				</div>
+
+				<div class="row second-step">
+						<div class="col-md-12 actions">
+							<h3 style="padding-left: 10px">Alterar imagem:</h3>
+							<div class="cards">
+							<div class="card" style="width: 18rem;">
+								<div class="card-body">
+									<h5 class="card-title">Canais:</h5>
+									<h6 class="card-subtitle mb-2 text-muted">Selecione o canal de cor</h6>
+									<input style="margin-left: 5px" type="radio" name="color" value="R" checked="checked" >R
+								<input style="margin-left: 5px" type="radio" name="color" value="G">G
+								<input style="margin-left: 5px" type="radio" name="color" value="B">B<br>
+								</div>
+							</div>
+							<div class="card" style="width: 18rem;">
+								<div class="card-body">
+									<h5 class="card-title">Reduzir ruido</h5>
+									<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+									<select id="ruido" style="width: 90px;"> 
+											<option value="1">1</option>
+											<option value="5">5</option>
+											<option value="7">7</option>
+											<option value="10">10</option>
+											<option value="15">15</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="card" style="width: 18rem;">
+								<div class="card-body">
+									<h5 class="card-title">Limiar</h5>
+									<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+									<input style="margin-bottom: 10px;" type="checkbox" id="otsu" value="otsu"><b>Otsu</b><br>
+								</div>
+							</div>
+							<div class="card" style="width: 18rem;">
+									<div class="card-body">
+										<h5 class="card-title">Morfologias:</h5>
+										<div class="actions">	
+												<div class="left morph">
+												<a onclick="insertMorphology('Opening');" class="selectlink" id="opening" value="opening">Opening</a><br>
+												<a onclick="insertMorphology('Closing');" class="selectlink" id="closing" value="closing">Closing</a><br>
+												<a onclick="insertMorphology('Erosion');" class="selectlink" id="erosion" value="erosion">Erosion</a><br>
+												<a onclick="insertMorphology('Dialtion');" class="selectlink" id="dilation" value="dilation">Dilation</a>
+											</div>
+											<div class="right">
+												<a onclick="zeroMorphology();" class="selectlink morph-clear">x</a>
+												<div id="fillBox" style="height:68px;width:81px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="card" style="width: 18rem;">
+										<div class="card-body">
+											<h5 class="card-title">Insira dimensões da img</h5>
+											<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+											<select id="ruido" style="width: 90px;"> 
+													<option value="1">1</option>
+													<option value="5">5</option>
+													<option value="7">7</option>
+													<option value="10">10</option>
+													<option value="15">15</option>
+											</select>
+										</div>
+									</div>
+							</div>
+							<h5 style="float:right;" id="send"><a onclick="send();" class="btn btn-success">Enviar</a></h5>
+
+					</div>
+			</div>
+
+
+
+
+			
+			<!-- /. ROW  -->
+
+			<script type="text/javascript">
+				$(document).ready(function () {
+					// Smart Wizard	
+					$('#wizard').smartWizard({ transitionEffect: 'slide', enableFinishButton: true, onfinish: closeModal });
+
+				});
+			</script>
+
+			<!-- /. ROW  -->
+			<div class="row">
+				<!--  Modal zone  -->
+
+
+				<div class="col-md-12">
+					<div style="text-align: center;margin-right: auto;margin-left: auto;">
+						<div>
+						</div>
+
+
+						<div id="openModal" class="modalDialog">
+							<div>
+								<a href="#close" title="Close" class="close">X</a>
+								<h2>Etapas</h2>
+								<div id="wizard" class="swMain">
+									<ul>
+										<li>
+											<a href="#step-1">
+												<label class="stepNumber">1</label>
+												<span class="stepDesc">
+                   Selecionar<br />
+                   <small>Selecionar imagens</small>
+                </span>
+											</a>
+										</li>
+										<li>
+											<a href="#step-2">
+												<label class="stepNumber">2</label>
+												<span class="stepDesc">
+                   Escolher<br />
+                   <small>Escolher imagem</small>
+                </span>
+											</a>
+										</li>
+										<li>
+											<a href="#step-3">
+												<label class="stepNumber">3</label>
+												<span class="stepDesc">
+                   Limitar<br />
+                   <small>Limitar a área</small>
+                </span>
+											</a>
+										</li>
+										<li>
+											<a href="#step-4">
+												<label class="stepNumber">4</label>
+												<span class="stepDesc">
+                   Marcar<br />
+                   <small>Marcar o lado</small>
+                </span>
+											</a>
+										</li>
+									</ul>
+									<div id="step-1">
+										<h2 class="StepTitle">Selecione as imagens</h2>
+										<br>
+
+									
+
+									</div>
+									<div id="step-2">
+										
+									</div>
+									<div id="step-3">
+										<h2 class="StepTitle">Limite a borda da barragem</h2>
+										<div>
+											<div class="col-md-9">
+												<div id="canvasDiv"></div>
+											</div>
+											<div class="col-md-3">
+												<h5  style="padding-top: 50%;" id="img-text-1"><a onclick="resetCanvas();" class="btn btn-danger">Imagem 1</a></h5>
+											</div>
+										</div>
+
+									</div>
+									<div id="step-4">
+										<h2 class="StepTitle">Clique sobre o lado que será descartado</h2>
+										<div class="col-md-8 col-sm-3 col-xs-6">
+											<div id="canvasDiv2"></div>
+										</div>
+										<div class="col-md-4 col-sm-3 col-xs-6">
+											<br>
+
+
+											<h5><a id="x" onclick="" class="btn btn-default">X</a></h5>
+											<h5><a id="y" onclick="" class="btn btn-default">Y</a></h5>
+											<br>
+											<h5 style="float:right;" id="send"><a onclick="send();" class="btn btn-success">Enviar</a></h5>
+										</div>
+									</div>
+								</div>
+<div id="canvasDiv3" style=" display:none;"></div>
+								<!-- End SmartWizard Content -->
+
+
+
+
+
+
+
+							</div>
+						</div>
+						<!-- /. Modal zone  -->
+						<!-- <div class="col-md-6 col-sm-3 col-xs-6">
+					<h5 class="center-header" id="img-text-1">Selecione a imagem 1</h5>
+					<div class="alert  text-center">
+						<img class="img-main-comp" id="img-1" src="">
+					</div>
+				</div>
+
+				<div class="col-md-6 col-sm-3 col-xs-6">
+					<h5 class="center-header" id="img-text-2">Selecione a Imagem 2</h5>
+					<div class="alert  text-center">
+						<img class="img-main-comp" id="img-2" src="">
+					</div>
+				</div> -->
+					</div>
+					<div id="second" class="row" style=" display:none;">
+						<hr />
+						<div class="col-md-12">
+							<div class="progress progress-striped active">
+								<div id="progress-bar-img" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="20" aria-valuemin="0"
+								 aria-valuemax="100" style="width: 0%">
+								</div>
+							</div>
+
+							<div class="row">
+
+							
+								<style>
+									/* jssor slider arrow navigator skin 02 css */
+									/*
+        .jssora02l                  (normal)
+        .jssora02r                  (normal)
+        .jssora02l:hover            (normal mouseover)
+        .jssora02r:hover            (normal mouseover)
+        .jssora02l.jssora02ldn      (mousedown)
+        .jssora02r.jssora02rdn      (mousedown)
+        .jssora02l.jssora02lds      (disabled)
+        .jssora02r.jssora02rds      (disabled)
+        */
+									
+									.jssora02l,
+									.jssora02r {
+										display: block;
+										position: absolute;
+										/* size of arrow element */
+										width: 55px;
+										height: 55px;
+										cursor: pointer;
+										background: url('img/a02.png') no-repeat;
+										overflow: hidden;
+									}
+									
+									.jssora02l {
+										background-position: -3px -33px;
+									}
+									
+									.jssora02r {
+										background-position: -63px -33px;
+									}
+									
+									.jssora02l:hover {
+										background-position: -123px -33px;
+									}
+									
+									.jssora02r:hover {
+										background-position: -183px -33px;
+									}
+									
+									.jssora02l.jssora02ldn {
+										background-position: -3px -33px;
+									}
+									
+									.jssora02r.jssora02rdn {
+										background-position: -63px -33px;
+									}
+									
+									.jssora02l.jssora02lds {
+										background-position: -3px -33px;
+										opacity: .3;
+										pointer-events: none;
+									}
+									
+									.jssora02r.jssora02rds {
+										background-position: -63px -33px;
+										opacity: .3;
+										pointer-events: none;
+									}
+									/* jssor slider thumbnail navigator skin 03 css */
+									/*.jssort03 .p            (normal).jssort03 .p:hover      (normal mouseover).jssort03 .pav          (active).jssort03 .pdn          (mousedown)*/
+									
+									.jssort03 .p {
+										position: absolute;
+										top: 0;
+										left: 0;
+										width: 62px;
+										height: 32px;
+									}
+									
+									.jssort03 .t {
+										position: absolute;
+										top: 0;
+										left: 0;
+										width: 100%;
+										height: 100%;
+										border: none;
+									}
+									
+									.jssort03 .w,
+									.jssort03 .pav:hover .w {
+										position: absolute;
+										width: 60px;
+										height: 30px;
+										border: white 1px dashed;
+										box-sizing: content-box;
+									}
+									
+									.jssort03 .pdn .w,
+									.jssort03 .pav .w {
+										border-style: solid;
+									}
+									
+									.jssort03 .c {
+										position: absolute;
+										top: 0;
+										left: 0;
+										width: 62px;
+										height: 32px;
+										background-color: #000;
+										filter: alpha(opacity=45);
+										opacity: .45;
+										transition: opacity .6s;
+										-moz-transition: opacity .6s;
+										-webkit-transition: opacity .6s;
+										-o-transition: opacity .6s;
+									}
+									
+									.jssort03 .p:hover .c,
+									.jssort03 .pav .c {
+										filter: alpha(opacity=0);
+										opacity: 0;
+									}
+									
+									.jssort03 .p:hover .c {
+										transition: none;
+										-moz-transition: none;
+										-webkit-transition: none;
+										-o-transition: none;
+									}
+									
+									* html .jssort03 .w {
+										width/**/
+										: 62px;
+										height/**/
+										: 32px;
+									}
+								</style>
+								<div class="col-md-6 col-sm-3 col-xs-6">
+									<div id="jssor_1" style="position:relative;margin:0 auto;top:0px;left:0px;width:600px;height:300px;overflow:hidden;visibility:hidden;">
+										<!-- Loading Screen -->
+										<div data-u="loading" style="position:absolute;top:0px;left:0px;background-color:rgba(0,0,0,0.7);">
+											<div style="filter: alpha(opacity=70); opacity: 0.7; position: absolute; display: block; top: 0px; left: 0px; width: 100%; height: 100%;"></div>
+											<div style="position:absolute;display:block;background:url('img/loading.gif') no-repeat center center;top:0px;left:0px;width:100%;height:100%;"></div>
+										</div>
+										<div id="jssor_1_div" data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:600px;height:300px;overflow:hidden;">
+
+										
+										</div>
+										<!-- Thumbnail Navigator -->
+										<div data-u="thumbnavigator" class="jssort03" style="position:absolute;left:0px;bottom:0px;width:600px;height:60px;" data-autocenter="1">
+											<div style="position:absolute;top:0;left:0;width:100%;height:100%;background-color:#000;filter:alpha(opacity=30.0);opacity:0.3;"></div>
+											<!-- Thumbnail Item Skin Begin -->
+											<div data-u="slides" style="cursor: default;">
+												<div data-u="prototype" class="p">
+													<div class="w">
+														<div data-u="thumbnailtemplate" class="t"></div>
+													</div>
+													<div class="c"></div>
+												</div>
+											</div>
+											<!-- Thumbnail Item Skin End -->
+										</div>
+										<!-- Arrow Navigator -->
+										<span data-u="arrowleft" class="jssora02l" style="top:0px;left:8px;width:55px;height:55px;" data-autocenter="2"></span>
+										<span data-u="arrowright" class="jssora02r" style="top:0px;right:8px;width:55px;height:55px;" data-autocenter="2"></span>
+									</div>
+								</div>
+								<div class="col-md-6 col-sm-3 col-xs-6">
+									<div id="jssor_2" style="position:relative;margin:0 auto;top:0px;left:0px;width:600px;height:300px;overflow:hidden;visibility:hidden;">
+										<!-- Loading Screen -->
+										<div data-u="loading" style="position:absolute;top:0px;left:0px;background-color:rgba(0,0,0,0.7);">
+											<div style="filter: alpha(opacity=70); opacity: 0.7; position: absolute; display: block; top: 0px; left: 0px; width: 100%; height: 100%;"></div>
+											<div style="position:absolute;display:block;background:url('img/loading.gif') no-repeat center center;top:0px;left:0px;width:100%;height:100%;"></div>
+										</div>
+										<div  id="jssor_2_div" data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:600px;height:300px;overflow:hidden;">
+
+									
+										</div>
+										<!-- Thumbnail Navigator -->
+										<div data-u="thumbnavigator" class="jssort03" style="position:absolute;left:0px;bottom:0px;width:600px;height:60px;" data-autocenter="1">
+											<div style="position:absolute;top:0;left:0;width:100%;height:100%;background-color:#000;filter:alpha(opacity=30.0);opacity:0.3;"></div>
+											<!-- Thumbnail Item Skin Begin -->
+											<div data-u="slides" style="cursor: default;">
+												<div data-u="prototype" class="p">
+													<div class="w">
+														<div data-u="thumbnailtemplate" class="t"></div>
+													</div>
+													<div class="c"></div>
+												</div>
+											</div>
+											<!-- Thumbnail Item Skin End -->
+										</div>
+										<!-- Arrow Navigator -->
+										<span data-u="arrowleft" class="jssora02l" style="top:0px;left:8px;width:55px;height:55px;" data-autocenter="2"></span>
+										<span data-u="arrowright" class="jssora02r" style="top:0px;right:8px;width:55px;height:55px;" data-autocenter="2"></span>
+									</div>
+								</div>
+
+
+
+
+
+
+
+
+
+
+
+
+							</div>
+
+						</div>
+
+
+
+
+					</div>
+					<!-- /. PAGE INNER  -->
+				</div>
+				<!-- /. PAGE WRAPPER  -->
+			</div>
+			<!-- /. WRAPPER  -->
+			<!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+
+			<!-- METISMENU SCRIPTS -->
+			<script src="../../static/assets/js/jquery.metisMenu.js"></script>
+			<!-- CUSTOM SCRIPTS -->
+			<script src="../../static/assets/js/custom.js"></script>
+			<!-- Meus Scripts -->
+			<script src="../../static/assets/js/control/functions.js"></script>
+
+
+</body>
+
+</html>

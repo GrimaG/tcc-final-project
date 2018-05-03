@@ -1,0 +1,583 @@
+
+/*=============================================================
+    Authour URI: www.binarycart.com
+    License: Commons Attribution 3.0
+
+    http://creativecommons.org/licenses/by/3.0/
+
+    100% To use For Personal And Commercial Use.
+    IN EXCHANGE JUST GIVE US CREDITS AND TELL YOUR FRIENDS ABOUT US
+   
+    ========================================================  */
+/*==============================================
+    GENERAL  STYLES    
+    =============================================*/
+body {
+    font-family: 'Open Sans', sans-serif;
+    background: #F3F3F3;
+}
+
+.main-title{
+    padding-top: 15%;
+    padding-bottom: 18%;
+}
+
+.start-btn{
+    margin: 0 auto;
+    display: table;
+    margin-top: 30px;
+    width: 10%;
+    border-radius: 4%;
+}
+
+ #wrapper {
+    width: 100%;
+    margin-top:50px;
+}
+
+#page-wrapper {
+    padding: 15px 15px;
+    min-height: 600px;
+    background:#F3F3F3;
+   
+}
+#page-inner {
+    width:100%;
+    margin:10px 20px 10px 0px;
+    background-color:#fff!important;
+    padding:10px;
+    border-radius: 6px;
+}
+
+.text-center {
+    text-align:center;
+}
+.user-image-back {
+    background-color:#1a1b29;
+}
+h5,.h5 {
+    font-size: 14px;
+font-weight: 900;
+text-transform: uppercase;
+padding-bottom:20px;
+}
+/*==============================================
+    MENU STYLES    
+    =============================================*/
+
+
+.navbar-inverse .navbar-nav > li > a {
+color: #06F;
+}
+.navbar-inverse .navbar-nav > li > a:hover,.navbar-inverse .navbar-nav > li > a:focus {
+color: #06F;
+}
+.arrow {
+    float: right;
+}
+
+.fa.arrow:before {
+    content: "\f104";
+}
+
+.active > a > .fa.arrow:before {
+    content: "\f107";
+}
+
+
+.nav-second-level li,
+.nav-third-level li {
+    border-bottom: none !important;
+}
+
+.nav-second-level li a {
+    padding-left: 37px;
+}
+
+.nav-third-level li a {
+    padding-left: 55px;
+}
+.sidebar-collapse , .sidebar-collapse .nav{
+	background:none;
+}
+.sidebar-collapse .nav {
+	padding:0;
+}
+.sidebar-collapse .nav > li > a {
+background: #FFFFFF;
+text-shadow: none;
+color:#1a1b29;
+}
+.sidebar-collapse > .nav > li > a {
+	padding:15px 10px;
+}
+.sidebar-collapse > .nav > li {
+	border-bottom: 1px solid rgba(240, 240, 240, 1) !important;
+}
+.sidebar-collapse .nav > li > a:hover,
+.sidebar-collapse .nav > li > a:focus {
+	
+	background:#F3F3F3;
+	outline:0;
+}
+.nav-second-level  > li:last-child > a:after,
+.nav-third-level  > li:last-child > a:after {
+	height:50%;
+}
+.nav-third-level > li > a:after,
+.nav-third-level > li > a:before  {
+	left:40px;
+}
+.navbar-side {
+	border:none;
+	background-color: #202020;
+	
+}
+.navbar-inverse {
+background-color: #f3f3f3;
+border-color: #D3D3D3;
+
+}
+
+.navbar-default {
+border:0px solid #DDDDDD;
+     
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+background-color: #B40101;
+}
+.navbar-default .navbar-toggle {
+border-color: #fff;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+background-color: #FFF;
+}
+.nav > li > a > i {
+    margin-right:10px;
+}
+.navbar-inverse .navbar-brand  {
+color: #000000;
+font-size: 25px;
+font-weight: 900;
+}
+.navbar-inverse .navbar-brand:hover,.navbar-inverse .navbar-brand:focus {
+    color: #000000;
+font-size: 25px;
+font-weight: 900;
+}
+.navbar-inverse .navbar-toggle {
+border-color: #8B7BFF;
+}
+
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
+background-color: #8B7BFF;
+}
+.adjust-nav {
+    padding-left:20px;padding-right:20px;
+}
+.navbar-toggle {
+    background-color: #8B7BFF;
+}
+.img-circle {
+    border-radius: 50%;
+}
+.center-header{
+    text-align: center;
+}
+.img-main-comp{
+        width: 100%;
+}
+
+/*==============================================
+    DASHBOARD STYLES     
+    =============================================*/
+
+.bg-color-blue {
+background-color: #9A86EB;
+color: #fff;
+}
+
+.no-boder {
+border: 1px solid #f3f3f3;
+}
+.back-footer-blue {
+background-color: #7479E6;
+border-top: 0px solid #fff;
+}
+
+/*==============================================
+    BOOTSTRAP STYLE CHANGES     
+    =============================================*/
+.nav-tabs > li > a {
+     -webkit-border-radius: 0px 0px 0px 0px;
+-moz-border-radius: 0px 0px 0px 0px;
+border-radius: 0px 0px 0px 0px;
+}
+
+.panel-group .panel {
+border-radius: 0px;
+  -webkit-border-radius:  0px;
+-moz-border-radius: 0px;
+}
+.panel {
+    border-radius: 0px;
+  -webkit-border-radius:  0px;
+-moz-border-radius: 0px;
+}
+.panel-heading {
+ border-top-left-radius: 0px; 
+ border-top-right-radius: 0px; 
+}
+.btn {
+     border-radius: 0px;
+  -webkit-border-radius:  0px;
+-moz-border-radius: 0px;
+}
+.progress {
+     border-radius: 0px;
+  -webkit-border-radius:  0px;
+-moz-border-radius: 0px;
+}
+/*==============================================
+    MEDIA QUERIES     
+    =============================================*/
+ 
+ @media(min-width:768px) {
+     #page-wrapper{
+        padding: 15px 30px;
+		
+    }
+	
+	
+    .navbar-side {
+        z-index: 1;
+        position: absolute;
+        width: 260px;
+    }
+
+   .navbar {
+ border-radius: 0px; 
+}
+   
+}
+.modalDialog {
+	position: fixed;
+	font-family: Arial, Helvetica, sans-serif;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgba(0,0,0,0.8);
+	z-index: 99999;
+	opacity:0;
+	-webkit-transition: opacity 400ms ease-in;
+	-moz-transition: opacity 400ms ease-in;
+	transition: opacity 400ms ease-in;
+	pointer-events: none;
+}
+.modalDialog:target {
+	opacity:1;
+	pointer-events: auto;
+}
+
+.modalDialog > div {
+	width: 1000px;
+    height: 411px;
+	position: relative;
+	margin: 10% auto;
+	padding: 5px 20px 13px 20px;
+	border-radius: 10px;
+	background: #fff;
+	background: -moz-linear-gradient(#fff, #999);
+	background: -o-linear-gradient(#fff, #999);
+}
+
+.close {
+	background: #606061;
+	color: #FFFFFF;
+	line-height: 25px;
+	position: absolute;
+	right: -12px;
+	text-align: center;
+	top: -10px;
+	width: 24px;
+	text-decoration: none;
+	font-weight: bold;
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	border-radius: 12px;
+	-moz-box-shadow: 1px 1px 3px #000;
+	-webkit-box-shadow: 1px 1px 3px #000;
+	box-shadow: 1px 1px 3px #000;
+}
+
+.close:hover { background: #00d9ff; }
+
+#img-1{
+           background-image:url('');
+           background-size: contain;
+           background-repeat: no-repeat;
+           background-position: center;
+           object-fit: contain;
+           margin-right: auto;
+           margin-left: auto;
+           height: 150px; 
+           border: 1px solid #bbb;
+           width: 65%;
+ }
+ #img-2{
+           background-image:url('');
+           background-size: contain;
+           background-repeat: no-repeat;
+           background-position: center;
+           object-fit: contain;
+           margin-right: auto;
+           margin-left: auto;
+           height: 150px;
+           border: 1px solid #bbb;
+           width: 65%;
+ }
+
+ #select-1{
+           background-image:url('');
+           background-size: contain;
+           background-repeat: no-repeat;
+           background-position: center;
+           object-fit: contain;
+           height: 250px;
+           border: 1px solid #bbb;
+           margin: 0 auto;
+ }
+ #select-2{
+           background-image:url('');
+           background-size: contain;
+           background-repeat: no-repeat;
+           background-position: center;
+           object-fit: contain;
+           height: 250px;
+           border: 1px solid #bbb;
+           margin: 0 auto;
+ }
+
+ #edit-canvas{
+    background-image:url('');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    object-fit: contain;
+    margin-right: auto;
+    margin-left: auto;
+    border: 1px solid #bbb;
+    width: 70%;
+ }
+ #edit-canvas2{
+    background-image:url('');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    object-fit: contain;
+    margin-right: auto;
+    margin-left: auto;
+    border: 1px solid #bbb;
+    width: 70%;
+ }
+
+
+
+.selectlink{
+     text-decoration:none;  
+     cursor: pointer;
+     color: black;
+}
+
+
+
+
+
+
+/* Off-canvas */
+
+
+
+ #bio {
+  float: right;
+  display: block;
+  margin-top: 30px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+}
+
+ #avatar img {
+  width: 150px;
+  border-radius: 50%;
+}
+
+
+
+
+.actions {
+    text-align: center;
+    display: inline;
+}
+
+.actions .left {
+    float: left;
+    width: 50%;
+}
+
+.actions .right {
+    float: right;
+    width: 50%;
+}
+
+.morph{
+    padding-top: 12px;
+    width: 49%;
+}
+
+
+.morph-clear{
+    color: red;
+    margin-left: 26px;
+    border-radius: 50%;
+}
+
+.second-step {
+    display: none;
+}
+
+.first-step {
+    display: none;
+    text-align: center;
+    padding-top: 10%;
+    padding-bottom: 10%;
+    margin-bottom: 5%;
+}
+
+.initial-step {
+    display: block;
+}
+
+.choose-option{
+    display: block;
+    margin: 0 auto;
+    width: 92%;
+    padding-top: 23px;
+}
+.list-imgs {
+    display: none;
+}
+.select-img {
+    display: none;
+}
+.choose-recent{
+    display: none;
+}
+
+.crop-img {
+    display: none;
+}
+
+
+
+
+.list-imgs .item-div{
+    float: left;
+    width: 20%;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#list{
+    width: 90%;
+    margin: 0 auto;
+
+}
+
+.list-imgs .item-img{
+    width: 100%;
+}
+
+.choose-recent-container{
+    width: 50%;
+    margin: 0 auto;
+}
+
+.choose-recent-container .child-container {
+    width: 45%;
+    float: left;
+}
+
+.choose-recent-container .child-container-2 {
+    width: 45%;
+    float: right;
+}
+
+.recent-btn {
+    margin-top: 315px;
+}
+
+.demo-card-fundao.mdl-card {
+    margin: 0 auto;
+    float: left;
+    cursor: pointer;
+    margin-right: 52px;
+    width: 256px;
+    height: 256px;
+    background: url('../barragens/cr-alto/fundao/2015-11-10.jpg') center / cover;
+}
+.demo-card-santarem.mdl-card {
+    margin: 0 auto;
+    float: left;
+    cursor: pointer;
+    margin-right: 52px;
+    width: 256px;
+    height: 256px;
+    background: url('../barragens/cr-alto/santarem/2015-11-10.jpg') center / cover;
+  }
+  .demo-card-germano.mdl-card {
+    margin: 0 auto;
+    float: left;
+    cursor: pointer;
+    margin-right: 52px;
+    width: 256px;
+    height: 256px;
+    background: url('../barragens/cr-alto/germano/2015-11-10.jpg') center / cover;
+  }
+  .demo-card-select.mdl-card {
+    margin: 0 auto;
+    float: left;
+    cursor: pointer;
+    width: 256px;
+    height: 256px;
+    background: white;
+  }
+  .demo-card-fundao > .mdl-card__actions,  .demo-card-santarem > .mdl-card__actions, .demo-card-germano > .mdl-card__actions {
+    height: 52px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+  .demo-card-image__filename {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .crop-area{
+    margin: 0 auto;
+  }
+
+.recent-btn-crop {
+    margin-top: -19px;
+}
+
+.card {
+    width: 225px;
+    float: left;
+}
+
+.cards {
+    width: 80%;
+    margin: 0 auto;
+}
