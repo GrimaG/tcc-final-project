@@ -265,6 +265,8 @@ function send(){
     document.getElementById('jssor_2_div').innerHTML ="";
     var radioValue = $("input[name='color']:checked").val();
     var noiseLevel = $("#ruido").val();
+    img_1 = getBase64FromCanvas("myCanvas");
+    img_2 = getBase64FromCanvas("myCanvas");
     var otsuThreshold = document.getElementById('otsu').checked;
     var transaction1 = new Transaction(radioValue, noiseLevel, otsuThreshold, applyMorphology , img_1);
     var send_object1 = JSON.stringify(transaction1); 
@@ -710,4 +712,8 @@ function buildCrop() {
 
 function removeSpot(){
     $('.spot').remove();
+}
+
+function getBase64FromCanvas(canvas){
+    return document.getElementById('myCanvas').toDataURL("image/jpeg");
 }
