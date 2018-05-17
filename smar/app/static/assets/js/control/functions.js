@@ -34,6 +34,8 @@ var original_width;
 var main_height;
 var original_height;
 var multiply_factor;
+var not_main_width;
+var not_main_height;
 
 
 function readURL(event, endpoint) {
@@ -66,14 +68,14 @@ function setMain(img, div_img) {
         main_img = img_1;
         not_main_img = img_2;
         //set atributo borda
-        getDimentions('#select-1');
+        getDimentions('#select-1', '#select-2');
         initCanvas();
         $('#select-1').css('border', '5px solid #73AD21');
         $('#select-2').css('border', '1px solid #bbb');
     } else {
         main_img = img_2;
         not_main_img = img_1;
-        getDimentions('#select-2');
+        getDimentions('#select-2', '#select-1');
         initCanvas();
         $('#select-2').css('border', '5px solid #73AD21');
         $('#select-1').css('border', '1px solid #bbb');
@@ -93,9 +95,13 @@ function setMainToSend(img, div_img) {
     }
     //setImageOnCanvas();
 }
-function getDimentions(id_img) {
+function getDimentions(id_img, id_secondary_img) {
     var actualImage = new Image();
     actualImage.src = $(id_img).css('background-image').replace(/"/g, "").replace(/url\(|\)$/ig, "");
+
+    var actualImage2 = new Image();
+    actualImage2.src = $(id_secondary_img).css('background-image').replace(/"/g, "").replace(/url\(|\)$/ig, "");
+   
     original_height = actualImage.height;
     original_width = actualImage.width;
     if (actualImage.width >= actualImage.height){
@@ -107,12 +113,21 @@ function getDimentions(id_img) {
         main_width = actualImage.width/(actualImage.height/500);
         multiply_factor = actualImage.height/500;
     }
+    if (actualImage2.width >= actualImage2.height){
+        not_main_width = 500;
+        not_main_height = actualImage2.height/(actualImage2.width/500);
+       // multiply_factor = actualImage.width/500;
+    }else {
+        not_main_height = 500;
+        not_main_width = actualImage2.width/(actualImage2.height/500);
+       // multiply_factor = actualImage.height/500;
+    }
 }
 
 
 function initCanvas() {
    // $('#edit-canvas').remove();
-   buildCrop();
+   buildCrop("maincanvas", "myCanvas", true, main_img);
 }
 
 var position_cut;
@@ -265,16 +280,16 @@ function send(){
     document.getElementById('jssor_2_div').innerHTML ="";
     var radioValue = $("input[name='color']:checked").val();
     var noiseLevel = $("#ruido").val();
-    img_1 = getBase64FromCanvas("myCanvas");
-    img_2 = getBase64FromCanvas("myCanvas");
+    img_1 = getBase64FromCanvas("firstCanvas");
+    img_2 = getBase64FromCanvas("secondCanvas");
     var otsuThreshold = document.getElementById('otsu').checked;
     var transaction1 = new Transaction(radioValue, noiseLevel, otsuThreshold, applyMorphology , img_1);
     var send_object1 = JSON.stringify(transaction1); 
     var transaction2 = new Transaction(radioValue, noiseLevel, otsuThreshold, applyMorphology , img_2);
     var send_object2 = JSON.stringify(transaction2);
     total_request +=2;
-    request("/channel/", send_object1, 1);
-    request("/channel/", send_object2, 2);
+    request("/channel/", send_object1, 2);
+    request("/channel/", send_object2, 1);
 }
 var img_process_1;
 var img_process_2;
@@ -329,10 +344,10 @@ function loadNext(data){
         var tmp_data = JSON.parse(data);
         tmp_data.img_old = img_1;
         data = JSON.stringify(tmp_data);
-        request(req, data, 1);
+        request(req, data, 2);
         tmp_data.img_old = img_2;
         data = JSON.stringify(tmp_data);
-        request(req, data, 2);
+        request(req, data, 1);
     }else{
         counter_data = 0;
         total_request = 0;
@@ -534,10 +549,19 @@ function selectImgOnClick(element){
 
 
 
-function buildCrop() {
+function buildCrop(location, id, isPrimary, image) {
 
     var condition = 1;
     var points = [];//holds the mousedown points
+
+    var canvas = document.createElement('canvas');
+    canvas.id = "myCanvas";
+    canvas.width = main_width;
+    canvas.height = main_height;
+    canvas.style.position = "relative";
+    var body = document.getElementById('maincanvas');
+    body.appendChild(canvas);
+
     var canvas = document.getElementById('myCanvas');
     this.isOldIE = (window.G_vmlCanvasManager);
     $(function() {
@@ -708,6 +732,41 @@ function buildCrop() {
        // }
     });
 
+    var primarycanvas = document.createElement('canvas');
+    primarycanvas.id = "firstCanvas";
+    primarycanvas.width = not_main_width;
+    primarycanvas.height = not_main_height;
+    primarycanvas.style.position = "relative";
+    var body = document.getElementById("secondarycanvas");
+    body.appendChild(primarycanvas);
+
+
+    var secondarycanvas = document.createElement('canvas');
+    secondarycanvas.id = "secondCanvas";
+    secondarycanvas.width = not_main_width;
+    secondarycanvas.height = not_main_height;
+    secondarycanvas.style.position = "relative";
+    var body = document.getElementById("secondarycanvas");
+    body.appendChild(secondarycanvas);
+    var secondarycanvas = document.getElementById("secondCanvas");
+    var primarycanvas = document.getElementById("firstCanvas");
+    var ctx1 = primarycanvas.getContext('2d');
+    var ctx2 = secondarycanvas.getContext('2d');
+    var imageObj1 = new Image();
+    var imageObj2 = new Image();
+      // Draw  image onto the canvas
+      imageObj1.onload = function() {
+        ctx1.drawImage(imageObj1, 0, 0,main_width, main_height);
+
+    };
+    imageObj1.src = main_img;
+
+    // Draw  image onto the canvas
+    imageObj2.onload = function() {
+        ctx2.drawImage(imageObj2, 0, 0,not_main_width, not_main_height);
+
+    };
+    imageObj2.src = not_main_img;
 };
 
 function removeSpot(){
@@ -715,5 +774,5 @@ function removeSpot(){
 }
 
 function getBase64FromCanvas(canvas){
-    return document.getElementById('myCanvas').toDataURL("image/jpeg");
+    return document.getElementById(canvas).toDataURL("image/jpeg");
 }
