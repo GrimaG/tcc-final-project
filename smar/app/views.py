@@ -65,3 +65,14 @@ def morphologys(request):
         old_img = imgprocess.morfologia(old_img, morph, 5)
     channel_old = imgprocess.convertImageTo64(imgprocess.convertBinaryArrayToImage(old_img))
     return HttpResponse('data:image/png;base64,'+channel_old.decode('utf-8'),content_type='application/json; charset=utf-8')
+
+@api_view(['POST'])
+def countPixels(request):
+    req = request.data
+    print (req.keys())
+    imgprocess = ImageProcess()
+    decode_old = base64.b64decode(req['img_old'].replace("data:image/png;base64,", "").encode())
+    old_img = mpimg.imread(io.BytesIO(decode_old) , format='JPG')
+    decode_new = base64.b64decode(req['img_new'].replace("data:image/png;base64,", "").encode())
+    new_img = mpimg.imread(io.BytesIO(decode_new) , format='JPG')
+    return HttpResponse(str(imgprocess.count(old_img, new_img)),content_type='application/json; charset=utf-8')

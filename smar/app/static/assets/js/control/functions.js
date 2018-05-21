@@ -50,7 +50,7 @@ function getBase64(file, endpoint) {
     reader.readAsDataURL(file);
     reader.onload = function () {
         // console.log(reader.result);
-        if (endpoint == "img-1") {
+        if (endpoint == "img-1" || endpoint == "img-1_2") {
             img_1 = reader.result;
             $('#select-1').css('background-image', 'url(' + img_1 + ')');
         } else {
@@ -194,7 +194,8 @@ function resetCanvas(){
 }
 
 
-
+count_new ='';
+count_old ='';
 
 
 function setImageOnCanvas() {
@@ -352,6 +353,7 @@ function loadNext(data){
         counter_data = 0;
         total_request = 0;
         loadCarroussel();
+        countpxl(count_old, count_new);
     }
 
 }
@@ -415,6 +417,11 @@ function loadCarroussel(){
 
 function insertIntocarrousel(img, nro){
     document.getElementById('jssor_'+nro +'_div').innerHTML += '<div><img data-u="image" src="'+ img + '" /><img data-u="thumb" src="'+ img + '" /></div>';
+    if(nro==1){
+        count_old =img;
+    }else{
+        count_new =img;
+    }
 }
 
 function closeModal(){
@@ -722,8 +729,6 @@ function buildCrop(location, id, isPrimary, image) {
                             $('#myimg').html('<img src="upload/' + xhr.responseText + '.png"/>');
                         }
 
-
-
                     }
                 }, 20);
 
@@ -775,4 +780,21 @@ function removeSpot(){
 
 function getBase64FromCanvas(canvas){
     return document.getElementById(canvas).toDataURL("image/jpeg");
+}
+
+function countpxl(old_img, new_img){
+    data = {
+        img_old: old_img,
+        img_new: new_img
+    }
+    var xhttp2 = new XMLHttpRequest();
+    xhttp2.onreadystatechange = function() {
+        if (xhttp2.readyState == XMLHttpRequest.DONE) {
+            $("#img-grow").html( "Diferença de " + (parseFloat(xhttp2.responseText*100)).toFixed(2) + "%" );
+        }   
+    }
+    xhttp2.open("POST", "/countPixels/");
+    xhttp2.setRequestHeader('Content-Type' , 'application/json');
+    var json = JSON.stringify(data);
+    xhttp2.send(json);
 }

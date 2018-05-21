@@ -326,6 +326,17 @@ border-radius: 0px;
            border: 1px solid #bbb;
            width: 65%;
  }
+ #img-1_2{
+    background-image:url('');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    object-fit: contain;
+    margin-right: auto;
+    margin-left: auto;
+    height: 150px; 
+    width: 65%;
+}
  #img-2{
            background-image:url('');
            background-size: contain;
@@ -338,6 +349,17 @@ border-radius: 0px;
            border: 1px solid #bbb;
            width: 65%;
  }
+ #img-2_2{
+    background-image:url('');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    object-fit: contain;
+    margin-right: auto;
+    margin-left: auto;
+    height: 150px;
+    width: 65%;
+}
 
  #select-1{
            background-image:url('');
@@ -479,6 +501,9 @@ border-radius: 0px;
     display: none;
 }
 
+.send-img{
+    display: none;
+}
 
 
 

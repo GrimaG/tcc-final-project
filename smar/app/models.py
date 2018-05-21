@@ -77,6 +77,13 @@ class ImageProcess():
         elif (morfologia == 'Dilation'):
             return morphology.dilation(image, disk(value))
 
+    def count( self, image_old, image_new):
+            old = np.array(image_old)
+            new = np.array(image_new)
+            px_old = np.sum(old > 0)
+            px_new = np.sum(new > 0)
+            return ((px_new/px_old)-1)
+
 '''
     def showImages(self, images, titles, qtdImages):
         fig, axes = plt.subplots(ncols=qtdImages, sharex=True, sharey=True,
