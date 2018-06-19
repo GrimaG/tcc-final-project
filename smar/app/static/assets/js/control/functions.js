@@ -36,13 +36,17 @@ var original_height;
 var multiply_factor;
 var not_main_width;
 var not_main_height;
-
-
+var next_window = true;
+var loaded_images = 0;
 function readURL(event, endpoint) {
+    loaded_images +=1;
     var getImagePath = URL.createObjectURL(event.target.files[0]);
     //console.log(event.target.files[0]); 
     getBase64(event.target.files[0], endpoint);
     $('#' + endpoint).css('background-image', 'url(' + getImagePath + ')');
+    if(loaded_images == 2){
+        next_window = true;
+    }
 }
 
 function getBase64(file, endpoint) {
@@ -81,6 +85,7 @@ function setMain(img, div_img) {
         $('#select-1').css('border', '1px solid #bbb');
     }
     //setImageOnCanvas();
+    next_window = true;
 }
 
 function setMainToSend(img, div_img) {
@@ -295,17 +300,21 @@ function send(){
 var img_process_1;
 var img_process_2;
 
+var img_process_area_1;
+var img_process_area_2;
+
 var counter_data=0;
 var total_request = 0;
 function request(address, data, nro){
     var xhttp2 = new XMLHttpRequest();
     xhttp2.onreadystatechange = function() {
         if (xhttp2.readyState == XMLHttpRequest.DONE) {
-            insertIntocarrousel(xhttp2.responseText, nro);
+            var res = JSON.parse(xhttp2.responseText);
+            insertIntocarrousel(res.old, nro);
             if(nro==1){
-                img_process_1 = xhttp2.responseText;
+                img_process_1 = res.old;
             }else{
-                img_process_2 = xhttp2.responseText;
+                img_process_2 = res.old;
             }
             counter_data+=1;
             if(counter_data == total_request){
@@ -353,7 +362,9 @@ function loadNext(data){
         counter_data = 0;
         total_request = 0;
         loadCarroussel();
-        countpxl(count_old, count_new);
+
+        crop();
+        
     }
 
 }
@@ -430,8 +441,11 @@ function closeModal(){
 }
 
 function nextStep(actual,next){
-    $('.' + actual).css('display', 'none');
-    $('.' + next).css('display', 'block');
+    if(next_window || actual == 'crop-img' || actual == 'choose-option'){
+        $('.' + actual).css('display', 'none');
+        $('.' + next).css('display', 'block');
+        next_window = false;
+    }
 }
 
 santarem = [
@@ -520,6 +534,7 @@ function selectImg(option) {
         //vai pra tela
         nextStep("choose-option","list-imgs");
     }
+    next_window = true;
 }
 
 twoImgSelected = [];
@@ -528,17 +543,23 @@ function selectImgOnClick(element){
     if(twoImgSelected.length<1){
         img_1 = $(element).attr('src');
         $(element).css('border', '5px solid #73AD21');
+        $(element).css('width', '95%');
         $('#img-1').css('background-image', 'url(' + $(element).attr('src') + ')');
         $('#select-1').css('background-image', 'url(' + $(element).attr('src') + ')');
 
     }else{
         img_2 = $(element).attr('src');
-        $(element).css('border', '5px solid #73AD21');
-        $('#img-2').css('background-image', 'url(' + $(element).attr('src') + ')');
-        $('#select-2').css('background-image', 'url(' + $(element).attr('src') + ')');
-
-
-        nextStep("list-imgs","choose-recent");
+        if(img_1 != img_2){
+            img_2 = $(element).attr('src');
+            $(element).css('border', '5px solid #73AD21');
+            $(element).css('width', '95%');
+            $('#img-2').css('background-image', 'url(' + $(element).attr('src') + ')');
+            $('#select-2').css('background-image', 'url(' + $(element).attr('src') + ')');
+    
+    
+            nextStep("list-imgs","choose-recent");
+        }
+       
        // $(element).css('border', '5px solid #73AD21');
        // $('#' + twoImgSelected[0].img).css('border', '1px solid #bbb');
        // twoImgSelected = [];
@@ -554,14 +575,32 @@ function selectImgOnClick(element){
     };
 }
 
-
-
+var imageObj;
+var imageObj3;
+var ctx;
+var ctx3;
+var primarycanvas;
+var mycanvas2;
+var canvas;
+var points = [];//holds the mousedown points
 function buildCrop(location, id, isPrimary, image) {
 
-    var condition = 1;
-    var points = [];//holds the mousedown points
+    mycanvas2 = document.createElement('canvas');
+    mycanvas2.id = "myCanvas2";
+    mycanvas2.width = not_main_width;
+    mycanvas2.height = not_main_height;
+    mycanvas2.style.position = "relative";
+    var body = document.getElementById("secondarycanvas");
+    body.appendChild(mycanvas2);
+    mycanvas2 = document.getElementById("myCanvas2");
+   
+   
+   
 
-    var canvas = document.createElement('canvas');
+    var condition = 1;
+   
+
+    canvas = document.createElement('canvas');
     canvas.id = "myCanvas";
     canvas.width = main_width;
     canvas.height = main_height;
@@ -569,18 +608,21 @@ function buildCrop(location, id, isPrimary, image) {
     var body = document.getElementById('maincanvas');
     body.appendChild(canvas);
 
-    var canvas = document.getElementById('myCanvas');
+    canvas = document.getElementById('myCanvas');
     this.isOldIE = (window.G_vmlCanvasManager);
     $(function() {
       //  if (document.domain == 'localhost') {
 
             if (this.isOldIE) {
                 G_vmlCanvasManager.initElement(myCanvas);
+                G_vmlCanvasManager.initElement(myCanvas2);
+
             }
-            var ctx = canvas.getContext('2d');
-            var imageObj = new Image();
+            ctx = canvas.getContext('2d');
+            imageObj = new Image();
 
-
+            ctx3 = mycanvas2.getContext('2d');
+            imageObj3 = new Image();
 
             function init() {
                 canvas.addEventListener('mousedown', mouseDown, false);
@@ -591,34 +633,46 @@ function buildCrop(location, id, isPrimary, image) {
             // Draw  image onto the canvas
             imageObj.onload = function() {
                 ctx.drawImage(imageObj, 0, 0,main_width, main_height);
-
+                imageObj.src = canvas.toDataURL("image/jpeg");
+                imageObj.onload = function() {
+                    ctx.drawImage(imageObj, 0, 0,main_width, main_height);
+                    ctx.globalCompositeOperation = 'destination-over';
+                };
             };
             imageObj.src = main_img;
 
+            // Draw  image onto the canvas
+            imageObj3.onload = function() {
+                ctx3.drawImage(imageObj3, 0, 0,not_main_width, not_main_height);
+                imageObj3.src = mycanvas2.toDataURL("image/jpeg");
+                imageObj3.onload = function() {
+                    ctx3.drawImage(imageObj3, 0, 0,not_main_width, not_main_height); 
+                    ctx3.globalCompositeOperation = 'destination-over';   
+                };
+            };
+            imageObj3.src = not_main_img;
 
 
             // Switch the blending mode
             ctx.globalCompositeOperation = 'destination-over';
-
+            ctx3.globalCompositeOperation = 'destination-over';
             //mousemove event
             $('#myCanvas').mousemove(function(e) {
                 if (condition == 1) {
 
                     ctx.beginPath();
-
+                    ctx3.beginPath();
                     $('#posx').html(e.offsetX);
                     $('#posy').html(e.offsetY);
+                    //points.push(e.offsetX, e.offsetY);
                 }
             });
             //mousedown event
             $('#myCanvas').mousedown(function(e) {
                 if (condition == 1) {
-
-                    var width_canvas = document.getElementById('myCanvas').scrollWidth;
-                    var height_canvas = document.getElementById('myCanvas').scrollHeight;
-                    var adapt_x = original_width / width_canvas;
-                    var adapt_y = original_height / height_canvas;
                     console.log("posit x = " + e.offsetX + " e y = " + e.offsetY);
+                    points.push(e.offsetX, e.offsetY);
+
                     if (e.which == 1) {
                         var pointer = $('<span class="spot">').css({
                             'position': 'absolute',
@@ -631,7 +685,7 @@ function buildCrop(location, id, isPrimary, image) {
 
                         });
                         //store the points on mousedown
-                        points.push(e.pageX, e.pageY);
+                        //points.push(e.pageX, e.pageY);
 
                         //console.log(points);
 
@@ -640,12 +694,21 @@ function buildCrop(location, id, isPrimary, image) {
                         var oldposy = $('#oldposy').html();
                         var posx = $('#posx').html();
                         var posy = $('#posy').html();
+
+                        //points.push(posx, posy);
                         ctx.beginPath();
                         ctx.moveTo(oldposx, oldposy);
+
                         if (oldposx != '') {
                             ctx.lineTo(posx, posy );
-
                             ctx.stroke();
+                        }
+                        ctx3.globalCompositeOperation = 'destination-out';
+                        ctx3.beginPath();
+                        ctx3.moveTo(oldposx, oldposy);
+                        if (oldposx != '') {
+                            ctx3.lineTo(posx, posy );
+                            ctx3.stroke();
                         }
                         $('#oldposx').html(e.offsetX);
                         $('#oldposy').html(e.offsetY);
@@ -656,88 +719,12 @@ function buildCrop(location, id, isPrimary, image) {
                 }//condition
             });
 
-            $('#crop').click(function() {
-                condition = 0;
-
-                //  var pattern = ctx.createPattern(imageObj, "repeat");
-                //ctx.fillStyle = pattern;
-                $('.spot').each(function() {
-                    $(this).remove();
-
-                })
-                //clear canvas
-
-                //var context = canvas.getContext("2d");
-
-                ctx.clearRect(0, 0, main_width, main_height);
-                ctx.beginPath();
-                ctx.width = main_width;
-                ctx.height = main_height;
-                ctx.globalCompositeOperation = 'destination-over';
-                //draw the polygon
-                setTimeout(function() {
-
-
-                    //console.log(points);
-                    var offset = $('#myCanvas').offset();
-                    //console.log(offset.left,offset.top);
-
-
-                    for (var i = 0; i < points.length; i += 2) {
-                        var x = parseInt(jQuery.trim(points[i]));
-                        var y = parseInt(jQuery.trim(points[i + 1]));
-
-
-                        if (i == 0) {
-                            ctx.moveTo(x - offset.left, y - offset.top);
-                        } else {
-                            ctx.lineTo(x - offset.left, y - offset.top);
-                        }
-                        //console.log(points[i],points[i+1])
-                    }
-
-                    if (this.isOldIE) {
-
-                        ctx.fillStyle = '';
-                        ctx.fill();
-                        var fill = $('fill', myCanvas).get(0);
-                        fill.color = '';
-                        fill.src = element.src;
-                        fill.type = 'tile';
-                        fill.alignShape = false;
-                    }
-                    else {
-                        var pattern = ctx.createPattern(imageObj, "repeat");
-                        ctx.fillStyle = pattern;
-                        ctx.fill();
-
-                        var dataurl = canvas.toDataURL("image/png");
-
-
-                        //upload to server (if needed)
-                        var xhr = new XMLHttpRequest();
-                        // // 
-                        xhr.open('POST', 'upload.php', false);
-                        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                        var files = dataurl;
-                        var data = new FormData();
-                        var myprod = $("#pid").val();
-                        data = 'image=' + files;
-                        xhr.send(data);
-                        if (xhr.status === 200) {
-                            console.log(xhr.responseText);
-                            $('#myimg').html('<img src="upload/' + xhr.responseText + '.png"/>');
-                        }
-
-                    }
-                }, 20);
-
-            });
+        
 
        // }
     });
 
-    var primarycanvas = document.createElement('canvas');
+    primarycanvas = document.createElement('canvas');
     primarycanvas.id = "firstCanvas";
     primarycanvas.width = not_main_width;
     primarycanvas.height = not_main_height;
@@ -754,9 +741,10 @@ function buildCrop(location, id, isPrimary, image) {
     var body = document.getElementById("secondarycanvas");
     body.appendChild(secondarycanvas);
     var secondarycanvas = document.getElementById("secondCanvas");
-    var primarycanvas = document.getElementById("firstCanvas");
+    primarycanvas = document.getElementById("firstCanvas");
     var ctx1 = primarycanvas.getContext('2d');
     var ctx2 = secondarycanvas.getContext('2d');
+    
     var imageObj1 = new Image();
     var imageObj2 = new Image();
       // Draw  image onto the canvas
@@ -773,7 +761,8 @@ function buildCrop(location, id, isPrimary, image) {
     };
     imageObj2.src = not_main_img;
 };
-
+var dataurl2;
+var dataurl;
 function removeSpot(){
     $('.spot').remove();
 }
@@ -798,3 +787,84 @@ function countpxl(old_img, new_img){
     var json = JSON.stringify(data);
     xhttp2.send(json);
 }
+
+function crop() {
+    imageObj = new Image();
+    imageObj3 = new Image();
+
+     // Draw  image onto the canvas
+     imageObj.src = img_process_1;
+
+ 
+     imageObj3.src = img_process_2;
+    
+    //img_process_1
+    condition = 0;
+    
+    //  var pattern = ctx.createPattern(imageObj, "repeat");
+    //ctx.fillStyle = pattern;
+    $('.spot').each(function() {
+        $(this).remove();
+
+    })
+    //clear canvas
+
+    //var context = canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, main_width, main_height);
+    ctx.beginPath();
+    ctx.width = main_width;
+    ctx.height = main_height;
+    ctx.globalCompositeOperation = 'destination-over';
+
+    ctx3.clearRect(0, 0, not_main_width, not_main_height);
+    ctx3.beginPath();
+    ctx3.width = not_main_width;
+    ctx3.height = not_main_height;
+    ctx3.globalCompositeOperation = 'destination-over';
+
+
+    //draw the polygon
+    setTimeout(function() {
+
+        //console.log(points);
+        var offset = $('#myCanvas').offset();
+        //console.log(offset.left,offset.top);
+        
+
+        for (var i = 0; i < points.length; i += 2) {
+            var x = parseInt(jQuery.trim(points[i]));
+            var y = parseInt(jQuery.trim(points[i + 1]));
+
+
+            if (i == 0) {
+                //ctx.moveTo(x - offset.left, y - offset.top);
+                ctx.moveTo(x, y);
+                ctx3.moveTo(x, y);
+            } else {
+                //ctx.lineTo(x - offset.left, y - offset.top);
+                ctx.lineTo(x , y);
+                ctx3.lineTo(x , y);
+
+            }
+            //console.log(points[i],points[i+1])
+        }
+
+    
+        var pattern = ctx.createPattern(imageObj, "repeat");
+        ctx.fillStyle = pattern;
+        ctx.fill();
+        var pattern3 = ctx3.createPattern(imageObj3, "repeat");
+        ctx3.fillStyle = pattern3;
+        ctx3.fill();
+
+        dataurl2 = mycanvas2.toDataURL("image/jpeg");
+        dataurl = canvas.toDataURL("image/jpeg");
+
+        //nextStep('crop-img', 'second-step');
+        countpxl(dataurl2, dataurl);
+        //upload to server (if needed)
+     
+    }, 20);
+
+};

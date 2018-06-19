@@ -616,3 +616,7 @@ border-radius: 0px;
 #secondarycanvas{
     display: none;
 }
+
+.btn-2 {
+    border-radius: 26px;
+}

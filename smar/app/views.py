@@ -25,8 +25,9 @@ def channel(request):
     old_img = mpimg.imread(io.BytesIO(decode_old) , format='JPG')
     old_img = imgprocess.isolate(old_img, req['channel'])
     channel_old = imgprocess.convertImageTo64(imgprocess.convertArrayToImage(old_img))
-    print (channel_old.decode('utf-8')[:20])
-    return HttpResponse('data:image/png;base64,'+channel_old.decode('utf-8'),content_type='application/json; charset=utf-8')
+ 
+    ret = {'old': 'data:image/png;base64,'+channel_old.decode('utf-8')}
+    return HttpResponse(json.dumps(ret),content_type='application/json; charset=utf-8')
 
 @api_view(['POST'])
 def noise(request):
@@ -37,7 +38,9 @@ def noise(request):
     old_img = imgprocess.isolate(old_img, req['channel'])
     old_img = imgprocess.noiseRemove(old_img, int(req['noise']))
     channel_old = imgprocess.convertImageTo64(imgprocess.convertArrayToImage(old_img))   
-    return HttpResponse('data:image/png;base64,'+channel_old.decode('utf-8'),content_type='application/json; charset=utf-8')
+    
+    ret = {'old': 'data:image/png;base64,'+channel_old.decode('utf-8')}
+    return HttpResponse(json.dumps(ret),content_type='application/json; charset=utf-8')
 
 @api_view(['POST'])
 def otsu(request):
@@ -49,7 +52,9 @@ def otsu(request):
     old_img = imgprocess.noiseRemove(old_img, int(req['noise']))
     old_img = imgprocess.binaryImage(old_img)
     channel_old = imgprocess.convertImageTo64(imgprocess.convertBinaryArrayToImage(old_img))
-    return HttpResponse('data:image/png;base64,'+channel_old.decode('utf-8'),content_type='application/json; charset=utf-8')
+
+    ret = {'old': 'data:image/png;base64,'+channel_old.decode('utf-8')}
+    return HttpResponse(json.dumps(ret),content_type='application/json; charset=utf-8')
 
 @api_view(['POST'])
 def morphologys(request):
@@ -64,7 +69,9 @@ def morphologys(request):
     for morph in req['morphology']:
         old_img = imgprocess.morfologia(old_img, morph, 5)
     channel_old = imgprocess.convertImageTo64(imgprocess.convertBinaryArrayToImage(old_img))
-    return HttpResponse('data:image/png;base64,'+channel_old.decode('utf-8'),content_type='application/json; charset=utf-8')
+   
+    ret = {'old': 'data:image/png;base64,'+channel_old.decode('utf-8')}
+    return HttpResponse(json.dumps(ret),content_type='application/json; charset=utf-8')
 
 @api_view(['POST'])
 def countPixels(request):
