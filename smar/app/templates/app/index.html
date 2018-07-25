@@ -171,9 +171,47 @@
 							</td>
 						</tr>	
 						</table>
-						<button id="crop" value="CROP" onclick="removeSpot();nextStep('crop-img', 'second-step');" class="recent-btn-crop recent-btn btn btn-success start-btn">Próximo</a>
+						<button id="crop" value="CROP" onclick="removeSpot();nextStep('crop-img', 'size-img');" class="recent-btn-crop recent-btn btn btn-success start-btn">Próximo</a>
 
 				</div>
+				<div class="size-img">
+
+					<table class="crop-area2">
+							<tr>
+							<td>
+							  <!--input type="button" id="crop" value="CROP" /-->
+							  <div id="container">
+									<h3>Para o calculo de área insira a escala em cm e informe na imagem o equivalente à proporção da escala</h5>
+									<div>
+										<div id="areacanvas" style="width:50%; float:left">
+										</div>	
+										<div style="width:50%;float:right">
+											<div id="escala" style="margin-top: 125px;">
+													<input id="pxlpcm" style="display: none"/>
+												<p>Insira a escala</p>
+												<input style="width:13px;" value="1" disabled /> : 
+												<input id="scale" type="number" style="width: 102px;"/> cm
+											</div>
+
+										</div>
+									</div>
+							  </div>
+						  <div id="png" style="display:block;"><br/></div>
+
+						   
+						  <div id="oldposx4" style="display:none;"></div>
+						  <div id="oldposy4" style="display:none;"></div>
+						  <div id="posx4" style="display:none;"></div>
+						  <div id="posy4" style="display:none;"></div>
+						  </td><td>
+							  
+						  <div id="myimg"></div><!--preview of image after upload-->
+						</td>
+					</tr>	
+					</table>
+					<button id="crop" value="CROP" onclick="removeSpot();nextStep('size-img', 'second-step');" style="margin-top: 27px;" class="recent-btn-crop recent-btn btn btn-success start-btn">Próximo</a>
+
+			</div>
 
 				<div class="row second-step">
 						<div class="col-md-12 actions">
@@ -229,13 +267,10 @@
 								</div>
 								<div class="card" style="width: 18rem;">
 										<div class="card-body">
-											<h5 class="card-title">Insira dimensões da img</h5>
-											<h6 class="card-subtitle mb-2 text-muted">Falta implementar, não ficou bom</h6>
-											<input style="margin-bottom: 10px;" type="number" id="resolution" ><b></b><br>
+											<h5 style="padding-top: 26%;" id="send"><a onclick="send();" class="btn btn-success">Enviar</a></h5>
 										</div>
 									</div>
 							</div>
-							<h5 style="padding-top: 200px;" id="send"><a onclick="send();" class="btn btn-success">Enviar</a></h5>
 
 					</div>
 			</div>

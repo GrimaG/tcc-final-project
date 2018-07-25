@@ -82,7 +82,11 @@ class ImageProcess():
             new = np.array(image_new)
             px_old = np.sum(old > 0)
             px_new = np.sum(new > 0)
-            return ((px_new/px_old)-1)
+            response = {
+                "percent": str(((px_new/px_old)-1)),
+                "pixels": str((px_new-px_old))
+            }
+            return response
 
 '''
     def showImages(self, images, titles, qtdImages):

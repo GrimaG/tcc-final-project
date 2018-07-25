@@ -78,8 +78,9 @@ def countPixels(request):
     req = request.data
     print (req.keys())
     imgprocess = ImageProcess()
-    decode_old = base64.b64decode(req['img_old'].replace("data:image/png;base64,", "").encode())
+    decode_old = base64.b64decode(req['img_old'].replace("data:image/jpeg;base64,", "").encode())
     old_img = mpimg.imread(io.BytesIO(decode_old) , format='JPG')
-    decode_new = base64.b64decode(req['img_new'].replace("data:image/png;base64,", "").encode())
+    decode_new = base64.b64decode(req['img_new'].replace("data:image/jpeg;base64,", "").encode())
     new_img = mpimg.imread(io.BytesIO(decode_new) , format='JPG')
-    return HttpResponse(str(imgprocess.count(old_img, new_img)),content_type='application/json; charset=utf-8')
+    response = imgprocess.count(old_img, new_img)
+    return HttpResponse(json.dumps(response),content_type='application/json; charset=utf-8')

@@ -370,7 +370,7 @@ function loadNext(data){
 }
 function loadCarroussel(){
  var jssor_1_options = {
-        $AutoPlay: true,
+        $AutoPlay: false,
         $ArrowNavigatorOptions: {
             $Class: $JssorArrowNavigator$
         },
@@ -441,7 +441,7 @@ function closeModal(){
 }
 
 function nextStep(actual,next){
-    if(next_window || actual == 'crop-img' || actual == 'choose-option'){
+    if(next_window || (actual == 'crop-img' && points.length>6) || actual == 'choose-option' || (actual == 'size-img' && distance >0 && $("#scale").val()>0)){
         $('.' + actual).css('display', 'none');
         $('.' + next).css('display', 'block');
         next_window = false;
@@ -583,6 +583,7 @@ var primarycanvas;
 var mycanvas2;
 var canvas;
 var points = [];//holds the mousedown points
+var distance =0;
 function buildCrop(location, id, isPrimary, image) {
 
     mycanvas2 = document.createElement('canvas');
@@ -594,7 +595,13 @@ function buildCrop(location, id, isPrimary, image) {
     body.appendChild(mycanvas2);
     mycanvas2 = document.getElementById("myCanvas2");
    
-   
+    areacanvas = document.createElement('canvas');
+    areacanvas.id = "myAreaCanvas";
+    areacanvas.width = main_width;
+    areacanvas.height = main_height;
+    areacanvas.style.position = "relative";
+    var body = document.getElementById('areacanvas');
+    body.appendChild(areacanvas);
    
 
     var condition = 1;
@@ -624,6 +631,9 @@ function buildCrop(location, id, isPrimary, image) {
             ctx3 = mycanvas2.getContext('2d');
             imageObj3 = new Image();
 
+            ctx4 = areacanvas.getContext('2d');
+            imageObj4 = new Image();
+
             function init() {
                 canvas.addEventListener('mousedown', mouseDown, false);
                 canvas.addEventListener('mouseup', mouseUp, false);
@@ -652,6 +662,16 @@ function buildCrop(location, id, isPrimary, image) {
             };
             imageObj3.src = not_main_img;
 
+            // Draw  image onto the canvas
+            imageObj4.onload = function() {
+                ctx4.drawImage(imageObj4, 0, 0,main_width, main_height);
+                imageObj4.src = areacanvas.toDataURL("image/jpeg");
+                imageObj4.onload = function() {
+                    ctx4.drawImage(imageObj4, 0, 0,main_width, main_height);
+                    ctx4.globalCompositeOperation = 'destination-over';
+                };
+            };
+            imageObj4.src = main_img;
 
             // Switch the blending mode
             ctx.globalCompositeOperation = 'destination-over';
@@ -719,7 +739,69 @@ function buildCrop(location, id, isPrimary, image) {
                 }//condition
             });
 
-        
+        //mousemove event
+        $('#myAreaCanvas').mousemove(function(e) {
+            if (condition == 1) {
+
+                ctx4.beginPath();
+                $('#posx4').html(e.offsetX);
+                $('#posy4').html(e.offsetY);
+                //points.push(e.offsetX, e.offsetY);
+            }
+        });
+        //mousedown event
+        $('#myAreaCanvas').mousedown(function(e) {
+             distance = $('#pxlpcm').attr('value');
+             console.log(distance);
+            if (condition == 1 && distance == null) {
+                console.log("posit area x = " + e.offsetX + " e y = " + e.offsetY);
+                //points.push(e.offsetX, e.offsetY);
+
+                if (e.which == 1) {
+                    var pointer = $('<span class="spot">').css({
+                        'position': 'absolute',
+                        'background-color': '#000000',
+                        'width': '5px',
+                        'height': '5px',
+                        'top': e.pageY,
+                        'left': e.pageX
+
+
+                    });
+                    //store the points on mousedown
+                    //points.push(e.pageX, e.pageY);
+
+                    //console.log(points);
+
+                    ctx4.globalCompositeOperation = 'destination-out';
+                    var oldposx = $('#oldposx4').html();
+                    var oldposy = $('#oldposy4').html();
+                    var posx = $('#posx4').html();
+                    var posy = $('#posy4').html();
+
+                    //points.push(posx, posy);
+                    ctx4.beginPath();
+                    ctx4.moveTo(oldposx, oldposy);
+
+                    if (oldposx != '') {
+                        ctx4.lineTo(posx, posy );
+                        ctx4.stroke();
+                        distance = caculePixelDistance({'x' : oldposx, 'y' : oldposy},{'x' : posx, 'y' : posy} );
+                        $('#pxlpcm').attr('value', distance);
+                        console.log("distancia", distance);
+                        $('#oldposx4').html('');
+                        $('#oldposy4').html('');
+                    }else{
+                        $('#oldposx4').html(e.offsetX);
+                        $('#oldposy4').html(e.offsetY);
+                    }
+                    
+                }
+                $(document.body).append(pointer);
+                //$('#posx4').html(e.offsetX);
+                //$('#posy4').html(e.offsetY);
+            }//condition
+        });
 
        // }
     });
@@ -771,6 +853,12 @@ function getBase64FromCanvas(canvas){
     return document.getElementById(canvas).toDataURL("image/jpeg");
 }
 
+function calculeArea(pxls){
+    escala = $("#scale").val();
+    pixel_value = distance/escala;
+    area = pixel_value * pxls;
+    return Math.pow(area, 2);
+}
 function countpxl(old_img, new_img){
     data = {
         img_old: old_img,
@@ -779,7 +867,8 @@ function countpxl(old_img, new_img){
     var xhttp2 = new XMLHttpRequest();
     xhttp2.onreadystatechange = function() {
         if (xhttp2.readyState == XMLHttpRequest.DONE) {
-            $("#img-grow").html( "Diferença de " + (parseFloat(xhttp2.responseText*100)).toFixed(2) + "%" );
+            obj = JSON.parse(xhttp2.responseText);
+            $("#img-grow").html( "Diferença de " + (parseFloat(obj.percent*100)).toFixed(2) + "% num total de " + calculeArea(obj.pixels) + "cm²" );
         }   
     }
     xhttp2.open("POST", "/countPixels/");
@@ -789,82 +878,98 @@ function countpxl(old_img, new_img){
 }
 
 function crop() {
-    imageObj = new Image();
-    imageObj3 = new Image();
-
-     // Draw  image onto the canvas
-     imageObj.src = img_process_1;
-
- 
-     imageObj3.src = img_process_2;
     
-    //img_process_1
-    condition = 0;
+        imageObj = new Image();
+        imageObj3 = new Image();
+
+        // Draw  image onto the canvas
+        imageObj.src = img_process_1;
+
     
-    //  var pattern = ctx.createPattern(imageObj, "repeat");
-    //ctx.fillStyle = pattern;
-    $('.spot').each(function() {
-        $(this).remove();
+        imageObj3.src = img_process_2;
+        if(points.length>1){  
+        //img_process_1
+        condition = 0;
+        
+        //  var pattern = ctx.createPattern(imageObj, "repeat");
+        //ctx.fillStyle = pattern;
+        $('.spot').each(function() {
+            $(this).remove();
 
-    })
-    //clear canvas
+        })
+        //clear canvas
 
-    //var context = canvas.getContext("2d");
+        //var context = canvas.getContext("2d");
 
-    ctx.clearRect(0, 0, main_width, main_height);
-    ctx.beginPath();
-    ctx.width = main_width;
-    ctx.height = main_height;
-    ctx.globalCompositeOperation = 'destination-over';
+        ctx.clearRect(0, 0, main_width, main_height);
+        ctx.beginPath();
+        ctx.width = main_width;
+        ctx.height = main_height;
+        ctx.globalCompositeOperation = 'destination-over';
 
-    ctx3.clearRect(0, 0, not_main_width, not_main_height);
-    ctx3.beginPath();
-    ctx3.width = not_main_width;
-    ctx3.height = not_main_height;
-    ctx3.globalCompositeOperation = 'destination-over';
-
-
+        ctx3.clearRect(0, 0, not_main_width, not_main_height);
+        ctx3.beginPath();
+        ctx3.width = not_main_width;
+        ctx3.height = not_main_height;
+        ctx3.globalCompositeOperation = 'destination-over';
+    }
     //draw the polygon
     setTimeout(function() {
+        if(points.length>1){
+            //console.log(points);
+            var offset = $('#myCanvas').offset();
+            //console.log(offset.left,offset.top);
+            
 
-        //console.log(points);
-        var offset = $('#myCanvas').offset();
-        //console.log(offset.left,offset.top);
-        
-
-        for (var i = 0; i < points.length; i += 2) {
-            var x = parseInt(jQuery.trim(points[i]));
-            var y = parseInt(jQuery.trim(points[i + 1]));
+            for (var i = 0; i < points.length; i += 2) {
+                var x = parseInt(jQuery.trim(points[i]));
+                var y = parseInt(jQuery.trim(points[i + 1]));
 
 
-            if (i == 0) {
-                //ctx.moveTo(x - offset.left, y - offset.top);
-                ctx.moveTo(x, y);
-                ctx3.moveTo(x, y);
-            } else {
-                //ctx.lineTo(x - offset.left, y - offset.top);
-                ctx.lineTo(x , y);
-                ctx3.lineTo(x , y);
+                if (i == 0) {
+                    //ctx.moveTo(x - offset.left, y - offset.top);
+                    ctx.moveTo(x, y);
+                    ctx3.moveTo(x, y);
+                } else {
+                    //ctx.lineTo(x - offset.left, y - offset.top);
+                    ctx.lineTo(x , y);
+                    ctx3.lineTo(x , y);
 
+                }
+                //console.log(points[i],points[i+1])
             }
-            //console.log(points[i],points[i+1])
+
+        
+            var pattern = ctx.createPattern(imageObj, "repeat");
+            ctx.fillStyle = pattern;
+            ctx.fill();
+            var pattern3 = ctx3.createPattern(imageObj3, "repeat");
+            ctx3.fillStyle = pattern3;
+            ctx3.fill();
         }
-
-    
-        var pattern = ctx.createPattern(imageObj, "repeat");
-        ctx.fillStyle = pattern;
-        ctx.fill();
-        var pattern3 = ctx3.createPattern(imageObj3, "repeat");
-        ctx3.fillStyle = pattern3;
-        ctx3.fill();
-
         dataurl2 = mycanvas2.toDataURL("image/jpeg");
         dataurl = canvas.toDataURL("image/jpeg");
 
         //nextStep('crop-img', 'second-step');
-        countpxl(dataurl2, dataurl);
+        countpxl(dataurl, dataurl2);
         //upload to server (if needed)
      
     }, 20);
 
 };
+
+function caculePixelDistance(initial, final){
+    //calculo de reta
+    if(final['x'] > initial['x']){
+        catx = final['x'] - initial['x'];
+    }else{
+        catx = initial['x'] - final['x'];
+    }
+    if(final['y'] > initial['y']){
+        caty = final['y'] - initial['y'];
+    }else{
+        caty = initial['y'] - final['y'];
+    }
+    distance = Math.sqrt(Math.pow(catx, 2) + Math.pow(caty, 2));
+    return distance;
+}

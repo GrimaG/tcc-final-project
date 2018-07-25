@@ -505,6 +505,10 @@ border-radius: 0px;
     display: none;
 }
 
+.size-img{
+    display: none;
+}
+
 
 
 .list-imgs .item-div{
